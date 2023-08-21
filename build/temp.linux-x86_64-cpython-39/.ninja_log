@@ -1,0 +1,5 @@
+# ninja log v5
+1	20539	1689682698430885700	/remote-home/ums_sunjiahao/droid-slam/build/temp.linux-x86_64-cpython-39/src/droid.o	675e19531bac060d
+2	159349	1689682837249159375	/remote-home/ums_sunjiahao/droid-slam/build/temp.linux-x86_64-cpython-39/src/tsdf_kernel.o	bdaa2299bdc59e1f
+1	166584	1689682844486060322	/remote-home/ums_sunjiahao/droid-slam/build/temp.linux-x86_64-cpython-39/src/correlation_kernels.o	eb3bbb5a025f5fda
+1	170050	1689682847941763724	/remote-home/ums_sunjiahao/droid-slam/build/temp.linux-x86_64-cpython-39/src/altcorr_kernel.o	a2801b351d9f7d6d
