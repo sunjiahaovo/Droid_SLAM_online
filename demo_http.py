@@ -101,14 +101,14 @@ def get_flying_data():
     global index
     if request.method == 'POST':
         rgb_img = request.files.get("rgb", None)
-        # depth_img = request.files.get("depth", None)
+        depth_img = request.files.get("depth", None)
         rgb_img = np.array(Image.open(rgb_img))
         rgb_img = cv2.cvtColor(rgb_img, cv2.COLOR_RGB2BGR)
-        # depth_img = np.array(skimage.io.imread(depth_img))
+        depth_img = np.array(skimage.io.imread(depth_img))
 
         os.makedirs("test_flying_data", exist_ok=True)
         cv2.imwrite(f"test_flying_data/{index}_main.png", rgb_img)
-        # cv2.imwrite(f"test_flying_data/{index}_depth.png", depth_img)
+        cv2.imwrite(f"test_flying_data/{index}_depth.png", depth_img)
         
         h0, w0, _ = rgb_img.shape
         h1 = int(h0 * np.sqrt((384 * 512) / (h0 * w0)))
@@ -118,17 +118,18 @@ def get_flying_data():
         rgb_img = rgb_img[:h1-h1%8, :w1-w1%8]
         rgb_img = torch.as_tensor(rgb_img).permute(2, 0, 1)
 
-        # depth_img = depth_img.astype(np.float32)
-        # depth_img = torch.as_tensor(depth_img)
-        # # for scale 
-        # depth_img /= 1000
-        # depth_img = F.interpolate(depth_img[None,None], (h1, w1)).squeeze()
-        # depth_img = depth_img[:h1-h1%8, :w1-w1%8]
+        depth_img = depth_img.astype(np.float32)
+        depth_img = torch.as_tensor(depth_img)
+        # for scale 
+        depth_img /= 1000
+        depth_img = F.interpolate(depth_img[None,None], (h1, w1)).squeeze()
+        depth_img = depth_img[:h1-h1%8, :w1-w1%8]
         intrinsic = torch.zeros(4, dtype=torch.float32)
         intrinsic[0::2] = droid_site.config['intrinsic'][0::2] * (w1 / w0)
         intrinsic[1::2] = droid_site.config['intrinsic'][1::2] * (h1 / h0)
-        # droid_processing(index, rgb_img[None], depth_img, intrinsic)
-        droid_processing(index, rgb_img[None], None, intrinsic)
+        droid_processing(index, rgb_img[None], depth_img, intrinsic)
+        # droid_processing(index, rgb_img[None], None, intrinsic)
+        
         # print(droid.video.images[index].shape)
         # if index == 8:
         #     nerf_data = {
@@ -144,6 +145,7 @@ def get_flying_data():
         #     }
             # response = requests.post('http://127.0.0.1:7400/get_droid_data/', json=nerf_data)
             # print(response.text, end='')  # 输出服务器返回的响应内容
+        
         if index >= 8:
             nerf_data = {
                 "rgb" : droid.video.images[:index].cpu().numpy().tolist(),
