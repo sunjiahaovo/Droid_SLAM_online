@@ -27,7 +27,7 @@ if __name__ == '__main__':
     assert len(image_path) == len(depth_path)
     depth_path.sort()
     for i,(rgb, depth) in enumerate(zip(image_path, depth_path)):
-        stop_flag = False if i < len(image_path) - 1 else True
+        stop_flag = False if i < len(image_path) else True
         send_image_to_server(rgb, depth, stop_flag, server_url)
         time.sleep(3)
     # for i, rgb in enumerate(image_path):

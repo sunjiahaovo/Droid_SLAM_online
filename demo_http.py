@@ -146,6 +146,7 @@ def get_flying_data():
             # response = requests.post('http://127.0.0.1:7400/get_droid_data/', json=nerf_data)
             # print(response.text, end='')  # 输出服务器返回的响应内容
         
+        index += 1
         if index >= 8:
             nerf_data = {
                 "rgb" : droid.video.images[:index].cpu().numpy().tolist(),
@@ -153,6 +154,7 @@ def get_flying_data():
             }
             response = requests.post('http://127.0.0.1:7400/get_droid_data/', json=nerf_data)
             print(response.text, end='')  # 输出服务器返回的响应内容
+        
         pose = droid.video.poses[:index].cpu().numpy()
         rgb = droid.video.images[:index].cpu().numpy()
         print(rgb.shape)
@@ -161,7 +163,7 @@ def get_flying_data():
         np.save((f'test_droid_data/{index}_rgb.npy', rgb))
         # rgb = rgb.transpose(1, 2, 0)
         # cv2.imwrite(f"test_droid_data/{index-7}_main.png", rgb.astype(np.uint8))
-        index += 1
+        
         if request.form.get("flying_finished", None) == "True":
             save_reconstruction(droid, args.reconstruction_path)
         return jsonify({'status': 'transfer success'})
